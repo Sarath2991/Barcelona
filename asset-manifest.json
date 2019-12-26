@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/Barcelona/static/css/main.41e4e6f1.chunk.css",
+    "main.js": "/Barcelona/static/js/main.eeceb5f3.chunk.js",
+    "main.js.map": "/Barcelona/static/js/main.eeceb5f3.chunk.js.map",
+    "runtime-main.js": "/Barcelona/static/js/runtime-main.be482422.js",
+    "runtime-main.js.map": "/Barcelona/static/js/runtime-main.be482422.js.map",
+    "static/js/2.1746da33.chunk.js": "/Barcelona/static/js/2.1746da33.chunk.js",
+    "static/js/2.1746da33.chunk.js.map": "/Barcelona/static/js/2.1746da33.chunk.js.map",
+    "index.html": "/Barcelona/index.html",
+    "precache-manifest.200d60e91fb47296d2f811979248726e.js": "/Barcelona/precache-manifest.200d60e91fb47296d2f811979248726e.js",
+    "service-worker.js": "/Barcelona/service-worker.js",
+    "static/css/main.41e4e6f1.chunk.css.map": "/Barcelona/static/css/main.41e4e6f1.chunk.css.map",
+    "static/js/2.1746da33.chunk.js.LICENSE": "/Barcelona/static/js/2.1746da33.chunk.js.LICENSE"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.be482422.js",
+    "static/js/2.1746da33.chunk.js",
+    "static/css/main.41e4e6f1.chunk.css",
+    "static/js/main.eeceb5f3.chunk.js"
+  ]
+}
