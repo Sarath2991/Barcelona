@@ -1,0 +1,469 @@
+Core Java questions: 
+
+
+What version of Java & spring/spring boot you recently worked with?
+
+What is lambda expression and functional interfaces in java 8 ?
+
+As it's name suggests its an expression which allows you to write more succinct code in Java 8. For example (a, b) -> a + b is a lambda expression (look for that arrow ->) which is equal to following code:
+
+
+public int value(int a, int b){
+   return a + b;
+}
+
+
+It's also called anonymous function because you are essentially writing the code you write in function but without name. 
+
+
+A functional interface in Java 8 is an interface with single abstract method. For example, Comparator which has just one abstract method called compare() or Runnable which has just one abstract method called run(). There are many more general purpose functional interface are introduced in JDK on java.util.function package. They are also annotated with @FunctionalInterface but that's optional.
+
+What are the advantages of using interfaces rather than abstract classes?
+
+Interface is used when you only want to declare which methods and members a class MUST have. Anyone implementing the interface will have to declare and implement the methods listed by the interface.
+If you also want to have a default implementation, use abstract class. Any class extending the abstract class will have to implement only its abstract methods and members, and will have some default implementation of the other methods of the abstract class, which you may override or not.
+--EDIT - forgot to mention, Earwicker reminded me
+Finally, you can implement as many interfaces as you want, but only extend one class (being it abstract or not). Keep that in mind before choosing.
+
+
+What is the output of following program?
+
+public class Test 
+{  	
+    static void charNum(String inputString) {
+    	HashMap<Character, Integer> charMap = new HashMap<Character, Integer>();
+    	char[] strArray = inputString.toCharArray();
+    	for(char c: strArray) {
+    		if(charMap.containsKey(c)) {
+    			charMap.put(c,  charMap.get(c)+1);
+    		} else {
+    			charMap.put(c, 1);
+    		}
+    	}
+    	Set<Character> charInString = charMap.keySet();
+    	for(Character ch: charInString) {
+    		if(charMap.get(ch) > 1) {
+    			System.out.println(ch +" : "+ charMap.get(ch));
+    		}
+    	}
+    }
+	public static void main(String[] args) {
+       charNum("JavaJ2Ee");
+    }   
+}
+
+
+Output:
+a : 2
+J : 2
+
+
+
+
+What are solid principles in java ?
+
+Single Responsibility Principle (SRP): A class should have only one reason to change, meaning it should have only one responsibility.
+Open/Closed Principle (OCP): Software entities (classes, modules, etc.) should be open for extension but closed for modification.
+Liskov Substitution Principle (LSP): Objects of a superclass should be replaceable with objects of its subclasses without breaking the correctness of the program.
+Interface Segregation Principle (ISP): A client should not be forced to depend on methods it does not use. Instead, it should depend on interfaces that are specific to its needs.
+Dependency Inversion Principle (DIP): High-level modules should not depend on low-level modules. Instead, they should both depend on abstractions. Abstractions should not depend on details. Details should depend on abstractions.
+
+How do you implement open/close principle in your code?
+
+Design classes to be easily extended.
+Use abstractions such as abstract classes or interfaces to define extension points.
+Avoid making changes to existing code when adding new functionality.
+# Example violating OCP
+
+class PaymentProcessor:
+    def process_payment(self, payment):
+        if payment.type == 'credit_card':
+            # Process credit card payment
+        elif payment.type == 'paypal':
+            # Process PayPal payment
+        else:
+            raise ValueError('Invalid payment type')
+
+# Example adhering to OCP
+
+class PaymentProcessor:
+    def process_payment(self, payment):
+        raise NotImplementedError()
+
+class CreditCardProcessor(PaymentProcessor):
+    def process_payment(self, payment):
+        # Process credit card payment
+
+class PaypalProcessor(PaymentProcessor):
+    def process_payment(self, payment):
+        # Process PayPal payment
+
+
+How do you ensure Liskov Substitution Principle (LSP) in your code?
+
+To ensure Liskov Substitution Principle (LSP) in my code, I follow these guidelines:
+Ensure that subtypes can be substituted for their base types without affecting the correctness of the program.
+Subtypes should not change the preconditions or postconditions of the methods of their base types.
+Subtypes should not introduce new exceptions that are not part of the exception hierarchy of their base types.
+# Example violating LSP
+
+class Rectangle:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def set_width(self, width):
+        self.width = width
+
+    def set_height(self, height):
+        self.height = height
+
+    def area(self):
+        return self.width * self.height
+
+class Square(Rectangle):
+    def __init__(self, side):
+        self.width = side
+        self.height = side
+
+    def set_width(self, width):
+        self.width = width
+        self.height = width
+
+    def set_height(self, height):
+        self.width = height
+        self.height = height
+
+# Example adhering to LSP
+
+class Shape:
+    def area(self):
+        raise NotImplementedError()
+
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def area(self):
+        return self.width * self.height
+
+class Square(Shape):
+    def __init__(self, side):
+        self.side = side
+
+    def area(self):
+        return self.side ** 2
+
+
+
+How do you apply Interface Segregation Principle (ISP) in your code?
+
+To apply Interface Segregation Principle (ISP) in my code, I follow these guidelines:
+Define small, focused interfaces that are specific to the needs of the clients that use them.
+Avoid creating large, monolithic interfaces that force clients to implement methods they don't need.
+Prefer multiple, specialized interfaces over a single, general-purpose interface.
+# Example violating ISP
+
+class Vehicle:
+    def start(self):
+        raise NotImplementedError()
+
+    def stop(self):
+        raise NotImplementedError()
+
+    def drive(self):
+        raise NotImplementedError()
+
+class Car(Vehicle):
+    def start(self):
+        # Start the engine
+
+    def stop(self):
+        # Stop the engine
+
+    def drive(self):
+        # Drive the car
+
+class Motorcycle(Vehicle):
+    def start(self):
+        # Start the engine
+
+    def stop(self):
+        # Stop the engine
+
+    def drive(self):
+        # Drive the motorcycle
+
+# Example adhering to ISP
+
+class Drivable:
+    def drive(self):
+        raise NotImplementedError()
+
+class Startable:
+    def start(self):
+        raise NotImplementedError()
+
+class Stoppable:
+    def stop(self):
+        raise NotImplementedError()
+
+class Car(Drivable, Startable, Stoppable):
+    def start(self):
+        # Start the engine
+
+    def stop(self):
+        # Stop the engine
+
+    def drive(self):
+        # Drive the car
+
+class Motorcycle(Drivable, Startable, Stoppable):
+    def start(self):
+        # Start the engine
+
+    def stop(self):
+        # Stop the engine
+
+    def drive(self):
+        # Drive the motorcycle
+
+
+
+
+
+
+How do you apply Dependency Inversion Principle (DIP) in your code?
+
+To apply Dependency Inversion Principle (DIP) in my code, I follow these guidelines:
+Define high-level modules that depend on abstractions, not on concrete implementations.
+Define low-level modules that provide concrete implementations for the abstractions used by high-level modules.
+Use dependency injection to provide the concrete implementations to the high-level modules.
+# Example violating DIP
+
+
+class OrderProcessor:
+    def __init__(self):
+        self.inventory = Inventory()
+
+
+    def process_order(self, order):
+        if self.inventory.has_stock(order.product, order.quantity):
+            self.inventory.remove_stock(order.product, order.quantity)
+            # Process the order
+        else:
+            # Raise an error
+
+
+class Inventory:
+    def __init__(self):
+        self.stock = {}
+
+
+    def has_stock(self, product, quantity):
+        return product in self.stock and self.stock[product] >= quantity
+
+
+    def remove_stock(self, product, quantity):
+        if product in self.stock:
+            self.stock[product] -= quantity
+
+
+# Example adhering to DIP
+
+
+class OrderProcessor:
+    def __init__(self, inventory: Inventory):
+        self.inventory = inventory
+
+
+    def process_order(self, order):
+        if self.inventory.has_stock(order.product, order.quantity):
+            self.inventory.remove_stock(order.product, order.quantity)
+            # Process the order
+        else:
+            # Raise an error
+
+
+class Inventory:
+    def __init__(self):
+        self.stock = {}
+
+
+    def has_stock(self, product, quantity):
+        return product in self.stock and self.stock[product] >= quantity
+
+
+    def remove_stock(self, product, quantity):
+        if product in self.stock:
+            self.stock[product] -= quantity
+
+
+inventory = Inventory()
+processor = OrderProcessor(inventory)
+
+
+What is Dependency Injection?
+Dependency injection makes it easy to create loosely coupled components, which typically means that components consume functionality defined by interfaces without having any first-hand knowledge of which implementation classes are being used.
+Dependency injection makes it easier to change the behaviour of an application by changing the components that implement the interfaces that define application features. It also results in components that are easier to isolate for unit testing.
+What is Reflection and why is it Useful?
+The name reflection is used to describe code which is able to inspect other code in the same system (or itself).
+For example, say you have an object of an unknown type in Java, and you would like to call a 'doSomething' method on it if one exists. Java's static typing system isn't really designed to support this unless the object conforms to a known interface, but using reflection, your code can look at the object and find out if it has a method called 'doSomething' and then call it if you want to.
+So, to give you a code example of this in Java (imagine the object in question is foo) :
+Method method = foo.getClass().getMethod("doSomething", null); method.invoke(foo, null);
+
+
+What Design Patterns you have used in your projects?
+Can you tell an example for the design pattern usage ?
+https://www.fullstack.cafe/blog/design-patterns-interview-questions
+
+How would you set up your unit testing for the project?
+
+How junit works & how mockito works and how would you mock?
+
+
+
+
+
+Spring/Spring Boot questions: 
+
+
+
+What are the advantages of Spring Boot? 
+
+It simplifies Spring dependencies by taking the opinionated view. Spring Boot provides a pre-configured set of technologies/framework to reduces error-prone configuration so we as a developer focused on building our business logic and not thinking of project setup. It reduces development code by avoiding a lot of boilerplate code. Easier to integrate Spring Boot Application with Spring Ecosystem like Spring JDBC, Spring ORM, Spring Data, Spring Security, etc. You really don’t need those big XML configurations for your project. Embed Tomcat, Jetty or Undertow directly. Provide opinionated Maven POM to simplify your configuration.
+
+
+When you are asked to create a REST API for Order management system or something? How would you design it? Like whats the structure you would use ? And what are all the annotations you would use? 
+
+
+What is Auto-Configuration in Spring Boot? 
+
+It takes a lot of configurations and boilerplate code create a simple Spring MVC application without Spring Boot. Spring Boot Auto Configuration provides an opinionated approach to bootstrap your application. Auto-Configuration will attempt to automatically try to set up our application with default behavior based on the jars in the classpath. For example, if Spring Boot finds HSQLDB in out classpath, it will automatically configure an in-memory database for us. Think of the auto-configuration as an intelligent system which can provide ready to use the application to us based on the configured jars in our classpath.
+
+How can we create a custom endpoint in Spring Boot Actuator? 
+To create a custom endpoint using Spring Boot 1.x, we should expose the instance of the custom endpoint class as a bean. We need to implement Endpoint interface.
+@Component public class CustomEndpoint implements Endpoint { //method implimentation } Copy Spring Boot 2.x changed it by introducing @Endpoint annotation. Spring Boot expose endpoints with @Endpoint@WebEndpointor @WebEndpointExtension over HTTP using Jersey, Spring MVC, or Spring WebFlux.Read Custom Endpoint in Spring Boot Actuator for more detail.
+
+
+What logging support provided by Spring Boot?
+ How can we control logging level in Spring Boot? Spring Boot provides options to use all popular logging API using the relevant starter, by default Spring Boot use Commons Logging for its internal logging. If we are using Spring Boot Starters for our application, Logback will be used for logging by default unless we want to use any other logging API. To use any other logging API, we need to add the correct starter in our application. In case we like to use Log4j2 for logging configuration, all you have to add the log4j2 starter in your application (You may have to exclude logback using pom.xml file).
+Spring Boot provides an easy way to configure and set logging levels for your application. We can use application.properties file to configure the desired Logging level for our application by using ‘logging.level.*=LEVEL’. Here is an example for the same
+logging.level.com.javadevjournal.rest=WARN Copy Read Spring Boot Logging for more detail.
+
+
+What Is An Embedded Server? And What is the default embedded server with Spring Boot?
+An embedded server is embedded as part of the deployable application.
+If we talk about Java applications, that would be a JAR.
+The advantage with this is you don’t need the server pre-installed in the deployment environment.
+With SpringBoot, the default embedded server is Tomcat. Other options available are Jetty and UnderTow.
+A lot of developers used to working with WAR and EAR files tend to assume that using an embedded server in a JAR is not stable.
+Embedded servers are quite scalable, and can host applications that support millions of users. These are no less scalable than the conventional fat servers.
+What is ORM Framework and how is JPA related to that?
+
+An Object-Relational Mapping (ORM) framework is a software tool that allows developers to map object-oriented programming language constructs to relational database constructs. It provides a layer of abstraction between the application code and the database, allowing developers to work with objects and classes rather than SQL queries.
+JPA (Java Persistence API) is a Java EE standard that provides an ORM framework for mapping Java objects to relational databases. It defines a set of interfaces and annotations that allow developers to create persistent entities, query data, and manage relationships between entities.
+JPA is built on top of the Java Persistence Architecture (JPA), which is a standard for managing persistence in Java applications. JPA provides a set of standard interfaces and annotations that can be used with any JPA-compliant ORM framework.
+What are some benefits of using an ORM framework like JPA?
+Using an Object-Relational Mapping (ORM) framework like JPA (Java Persistence API) has several benefits. Some of them are:
+Increased Productivity: JPA provides a high level of abstraction that allows developers to focus on business logic instead of writing SQL queries. This can lead to faster development cycles and fewer errors.
+Portability: JPA abstracts away the details of the underlying database, which makes it possible to switch databases without changing the application code. This can save a lot of time and effort when porting applications between different databases.
+Scalability: JPA provides a caching mechanism that can help improve application performance by reducing the number of database queries needed to access data. This can help an application scale better as the number of users and amount of data grows.
+Maintainability: JPA provides a clear separation between application logic and persistence logic. This makes it easier to maintain and modify an application over time.
+Standardization: JPA is a Java EE standard, which means that it is widely adopted and supported by many different vendors. This helps ensure that the application code is portable and compatible with a wide range of different platforms.
+
+Can you tell the difference between JPA and Hibernate?
+JPA (Java Persistence API) is a specification for ORM (Object-Relational Mapping) in Java, while Hibernate is an implementation of JPA.
+In other words, JPA provides a standard set of interfaces and annotations for ORM, while Hibernate is a concrete implementation of those interfaces and annotations.
+You can find More Differences listed here - JPA vs Hibernate
+5. What are entities in JPA? Explain the concept
+In JPA, an entity is a lightweight Java class that represents a persistent data object. Entities are used to map Java objects to database tables, where each entity corresponds to a row in the table.
+Entities are defined using annotations, which provide metadata about how the entity should be persisted and how it relates to other entities in the application. The most commonly used annotation for defining entities is @Entity, which marks a Java class as an entity. Entities typically have instance variables that correspond to columns in the database table, and methods that provide access to these variables. JPA also provides annotations for defining relationships between entities, such as @OneToOne, @OneToMany, @ManyToOne, and @ManyToMany.
+Entities can be persisted in the database using the JPA “EntityManager” interface, which provides methods for creating, reading, updating, and deleting entities. When an entity is persisted, JPA creates a corresponding row in the database table, and when an entity is read from the database, JPA populates the entity's instance variables with the corresponding column values.
+What is the difference between PUT, Post & Patch ?
+
+POST creates a resource. PUT replaces a resource. PATCH updates a resource.
+
+
+
+
+
+Data questions: https://github.com/OBenner/data-engineering-interview-questions/blob/master/content/spark.md
+
+What is the core concept behind Apache Hadoop framework?
+Apache Hadoop is based on the concept of MapReduce algorithm. In MapReduce algorithm, Map and Reduce operations are used to process very large data set. In this concept, Map method does the filtering and sorting of data. Reduce method performs the summarizing of data. This is a concept from functional programming. The key points in this concept are scalability and fault tolerance. In Apache Hadoop these features are achieved by multi-threading and efficient implementation of MapReduce.
+
+What is the difference between Nodes in HDFS?
+The differences between NameNode, BackupNode and Checkpoint NameNode are as follows:
+NameNode: NameNode is at the heart of the HDFS file system that manages the metadata i.e. the data of the files is not stored on the NameNode but rather it has the directory tree of all the files present in the HDFS file system on a Hadoop cluster. NameNode uses two files for the namespace:
+fsimage file: This file keeps track of the latest checkpoint of the namespace.
+edits file: This is a log of changes made to the namespace since checkpoint.
+Checkpoint Node: Checkpoint Node keeps track of the latest checkpoint in a directory that has same structure as that of NameNode’s directory. Checkpoint node creates checkpoints for the namespace at regular intervals by downloading the edits and fsimage file from the NameNode and merging it locally. The new image is then again updated back to the active NameNode.
+BackupNode: This node also provides check pointing functionality like that of the Checkpoint node but it also maintains its up-to-date in-memory copy of the file system namespace that is in sync with the active NameNode.
+
+
+What is the optimum hardware configuration to run Apache Hadoop?
+To run Apache Hadoop jobs, it is recommended to use dual core machines or dual processors. There should be 4GB or 8GB RAM with the processor with Error-correcting code (ECC) memory. Without ECC memory, there is high chance of getting checksum errors. For storage high capacity SATA drives (around 7200 rpm) should be used in Hadoop cluster. Around 10GB bandwidth Ethernet networks are good for Hadoop.
+
+
+
+How does indexing work in Hadoop?
+Indexing in Hadoop has two different levels. Index based on File URI: In this case data is indexed based on different files. When we search for data, index will return the files that contain the data. Index based on InputSplit: In this case, data is indexed based on locations where input split is located.
+
+How will you check if a file exists in HDFS?
+In Hadoop, we can run hadoop fs command with option e to check the existence of a file in HDFS. This is generally used for testing purpose. Command will be as follows:
+%>hadoop fs -test -ezd file_uri e is for checking the existence of file z is for checking non-zero size of File d is for checking if the path is directory
+
+What is the default replication factor in HDFS?
+Default replication factor in HDFS is 3. It means there will be 3 copies of each data. We can configure it with dfs.replication in hdfs-site.xml file. We can even set it from command line in Hadoop fs command.
+
+What is a Balancer in HDFS?
+In HDFS, data is stored in blocks on a DataNode. There can be a situation when data is not uniformly spread into blocks on a DataNode. When we add a new DataNode to a cluster, we can face such a situation. In such a case, HDFS provides a useful tool Balancer to analyze the placement of blocks on a DataNode. Some people call it as Rebalancer also. This is an administrative tool used by admin staff. We can use this tool to spread the blocks in a uniform manner on a DataNode.
+
+
+
+
+What is the difference between delete and truncate in sql?
+Main differences between DELETE and TRUNCATE commands are: DML vs. DDL: DELETE is a Data Manipulation Language (DML) command. TRUNCATE is a Data Definition Language (DDL) command.
+Number of Rows: We can use DELETE command to remove one or more rows from a table. TRUNCATE command will remove all the rows from a table. WHERE clause: DELETE command provides support for WHERE clause that can be used to filter the data that we want to delete. TRUNCATE command can only delete all the rows. There is no WHERE clause in TRUNCATE command. Commit: After DELETE command we have to issue COMMIT or ROLLBACK command to confirm our changes. After TRUNCATE command there is no need to run COMMIT. Changes done by TRUNCATE command can not be rolled back.
+
+
+What is the difference between primary key and unique key in sql?
+Main differences between Primary key and Unique key in SQL are:
+Number: There can be only one Primary key in a table. There can be more than one Unique key in a table.
+Null value: In some DBMS Primary key cannot be NULL. E.g. MySQL adds NOT NULL to Primary key. A Unique key can have null values.
+Unique Identifier: Primary Key is a unique identifier of a record in database table. Unique key can be null and we may not be able to identify a record in a unique way by a unique key
+Changes: It is not recommended to change a Primary key. A Unique key can be changed much easily.
+Usage: Primary Key is used to identify a row in a table. A Unique key is used to prevent duplicate non-null values in a column.
+
+
+
+
+What is the difference between inner join and outer join in sql?
+
+
+Let say we have two tables X and Y. The result of an INNER JOIN of X and Y is X intersect. It is the INNER overlapping intersection part of a Venn diagram. The result of an OUTER JOIN of X and Y is X union Y. It is the OUTER parts of a Venn diagram. E.g. Consider following two tables, with just one column x and y:
+x | y
+-|- - 10 | 30 20 | 40 30 | 50 40 | 60 In above tables (10,20) are unique to table X, (30,40) are common, and (50,60) are unique to table Y. INNER JOIN An INNER JOIN by using following query will give the intersection of the two tables X and Y. The intersection is the common data between these tables. select * from X INNER JOIN Y on X.x =Y.y; x | y --+-- 30 | 30 40 | 40
+OUTER JOIN A full OUTER JOIN by using following query will us the union of X and Y. It will have all the rows in X and all the rows in Y. If some row in X has not corresponding value in Y, then Y side will be null, and vice versa. select * from X FULL OUTER JOIN Y on X.x = Y.y;
+x| y ----- + ----- 10 | null 20 | null
+30 | 30 40 | 40 null | 60 null | 50
+When would we go for an outer join? Can you say an example?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
